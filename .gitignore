@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+
+# Editor / tooling
+.vscode/
+.idea/
+
+# Cursor / terminals (if present inside project)
+terminals/
+

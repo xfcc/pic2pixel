@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pic2Pixel - 1-bit 像素风</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <h1>Pic2Pixel</h1>
+    <p class="tagline">上传图片，一键转换为 1-bit 像素风 PNG</p>
+
+    <form id="convert-form" class="form" enctype="multipart/form-data">
+      <div class="field">
+        <label for="image">选择图片</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+      </div>
+      <div class="field">
+        <label for="algorithm">抖动算法</label>
+        <select id="algorithm" name="algorithm">
+          {% for algo in algorithms %}
+          <option value="{{ algo }}" {% if algo == 'atkinson' %}selected{% endif %}>{{ algo }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field optional">
+        <label>缩小尺寸（可选）</label>
+        <div class="size-inputs">
+          <input type="number" id="max_width" name="max_width" placeholder="宽" min="1" max="2000" step="1">
+          <span>×</span>
+          <input type="number" id="max_height" name="max_height" placeholder="高" min="1" max="2000" step="1">
+        </div>
+      </div>
+      <button type="submit" id="submit-btn" class="btn">转换为 1-bit</button>
+    </form>
+
+    <div id="message" class="message" role="alert" hidden></div>
+
+    <div class="preview-section">
+      <div class="preview-box">
+        <p class="preview-label">原图</p>
+        <div id="original-preview" class="preview-area"></div>
+      </div>
+      <div class="preview-box">
+        <p class="preview-label">结果</p>
+        <div id="result-preview" class="preview-area"></div>
+        <a id="download-link" class="download-link" href="#" download="pic2pixel.png" hidden>下载 PNG</a>
+      </div>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
