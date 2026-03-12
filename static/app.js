@@ -49,6 +49,8 @@
     const formData = new FormData();
     formData.append('image', file);
     formData.append('algorithm', document.getElementById('algorithm').value);
+    const ratio = document.getElementById('ratio').value;
+    if (ratio) formData.append('ratio', ratio);
     const maxWidth = document.getElementById('max_width').value;
     const maxHeight = document.getElementById('max_height').value;
     if (maxWidth) formData.append('max_width', maxWidth);

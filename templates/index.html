@@ -26,11 +26,19 @@
       </div>
       <div class="field optional">
         <label>缩小尺寸（可选）</label>
-        <div class="size-inputs">
-          <input type="number" id="max_width" name="max_width" placeholder="宽" min="1" max="2000" step="1">
-          <span>×</span>
-          <input type="number" id="max_height" name="max_height" placeholder="高" min="1" max="2000" step="1">
+        <div class="size-row">
+          <select id="ratio" name="ratio" title="限定比例：选后只填宽或只填高即可；都填则按设定比例输出">
+            {% for value, label in ratio_options %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+          <span class="size-inputs">
+            <input type="number" id="max_width" name="max_width" placeholder="宽" min="1" max="2000" step="1">
+            <span>×</span>
+            <input type="number" id="max_height" name="max_height" placeholder="高" min="1" max="2000" step="1">
+          </span>
         </div>
+        <p class="hint">限定比例时：只填宽按宽约束，只填高按高约束；宽高都填则按设定比例输出。不选比例时宽高为最大边约束。</p>
       </div>
       <button type="submit" id="submit-btn" class="btn">转换为 1-bit</button>
     </form>

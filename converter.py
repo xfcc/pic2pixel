@@ -35,13 +35,15 @@ def convert_to_1bit(
     image_input,
     algorithm="atkinson",
     max_size=None,
+    target_size=None,
 ) -> bytes:
     """
     Convert image to 1-bit dithered PNG.
 
     :param image_input: PIL Image, file-like object, or bytes of image data.
     :param algorithm: Dithering method (e.g. "atkinson", "floyd-steinberg").
-    :param max_size: Optional (width, height) to resize before dithering (keeps aspect).
+    :param max_size: Optional (width, height) to fit inside (keeps aspect, no crop).
+    :param target_size: Optional (width, height) for exact output size (resize + center crop).
     :return: PNG image as bytes.
     """
     if isinstance(image_input, bytes):
@@ -49,7 +51,21 @@ def convert_to_1bit(
 
     img = Image.open(image_input).convert("RGB")
 
-    if max_size and (img.width > max_size[0] or img.height > max_size[1]):
+    if target_size:
+        # Exact size: scale to cover then center-crop
+        tw, th = target_size
+        if tw < 1 or th < 1:
+            target_size = None
+        else:
+            r = max(tw / img.width, th / img.height)
+            new_w = max(1, int(round(img.width * r)))
+            new_h = max(1, int(round(img.height * r)))
+            img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+            x = (new_w - tw) // 2
+            y = (new_h - th) // 2
+            img = img.crop((x, y, x + tw, y + th))
+
+    if not target_size and max_size and (img.width > max_size[0] or img.height > max_size[1]):
         img.thumbnail(max_size, Image.Resampling.LANCZOS)
 
     algo = algorithm.lower() if algorithm else "atkinson"
